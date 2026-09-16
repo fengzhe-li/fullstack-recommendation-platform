@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="640" fill="#ffffff"/>
+  <text x="480" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">MeetEat — Recommendation / Data Flow</text>
+
+  <!-- Inputs -->
+  <rect x="40" y="66" width="220" height="80" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="150" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">Participant Constraints</text>
+  <text x="150" y="108" text-anchor="middle" font-size="11" fill="#1e40af">location, budget, rating,</text>
+  <text x="150" y="123" text-anchor="middle" font-size="11" fill="#1e40af">cuisine likes/dislikes,</text>
+  <text x="150" y="138" text-anchor="middle" font-size="11" fill="#1e40af">dietary needs, travel mode/time</text>
+
+  <rect x="700" y="66" width="220" height="80" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="810" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">Room Settings</text>
+  <text x="810" y="108" text-anchor="middle" font-size="11" fill="#1e40af">occasion, rain mode,</text>
+  <text x="810" y="126" text-anchor="middle" font-size="11" fill="#1e40af">open-now filter</text>
+
+  <rect x="380" y="66" width="200" height="80" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="480" y="94" text-anchor="middle" font-size="13" font-weight="600" fill="#4c1d95">Static Restaurant</text>
+  <text x="480" y="112" text-anchor="middle" font-size="13" font-weight="600" fill="#4c1d95">Seed Data</text>
+  <text x="480" y="130" text-anchor="middle" font-size="11" fill="#4c1d95">London venues catalogue</text>
+
+  <line x1="150" y1="146" x2="345" y2="200" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow3)"/>
+  <line x1="480" y1="146" x2="480" y2="200" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow3)"/>
+  <line x1="810" y1="146" x2="615" y2="200" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <!-- Hard filters -->
+  <rect x="230" y="200" width="500" height="70" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="480" y="224" text-anchor="middle" font-size="14" font-weight="600" fill="#7f1d1d">Hard Filters</text>
+  <text x="480" y="244" text-anchor="middle" font-size="11.5" fill="#991b1b">budget · minimum rating · disliked cuisines</text>
+  <text x="480" y="260" text-anchor="middle" font-size="11.5" fill="#991b1b">dietary requirements · open-now · max travel time exceeded</text>
+
+  <line x1="480" y1="270" x2="480" y2="310" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <!-- Weighted scoring -->
+  <rect x="180" y="310" width="600" height="90" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="480" y="333" text-anchor="middle" font-size="14" font-weight="600" fill="#78350f">Weighted Scoring (Deterministic Scoring Engine)</text>
+  <text x="480" y="354" text-anchor="middle" font-size="11.5" fill="#78350f">Geo score (avg. travel time + variance across the group)</text>
+  <text x="480" y="371" text-anchor="middle" font-size="11.5" fill="#78350f">Cuisine match score · Quality score (rating + reviews) · Occasion fit score</text>
+  <text x="480" y="388" text-anchor="middle" font-size="11.5" fill="#78350f">Total score → deterministic sort → top 3 (best / close / taste)</text>
+
+  <line x1="480" y1="400" x2="480" y2="440" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <!-- Persisted -->
+  <rect x="280" y="440" width="400" height="60" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="480" y="465" text-anchor="middle" font-size="13.5" font-weight="600" fill="#14532d">Persisted to PostgreSQL</text>
+  <text x="480" y="483" text-anchor="middle" font-size="11.5" fill="#166534">recommendation_runs · recommendation_results</text>
+
+  <line x1="680" y1="470" x2="770" y2="470" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <rect x="770" y="440" width="160" height="60" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="850" y="462" text-anchor="middle" font-size="12" fill="#475569">Optional AI</text>
+  <text x="850" y="478" text-anchor="middle" font-size="12" fill="#475569">explanation (Z.AI)</text>
+
+  <line x1="850" y1="500" x2="850" y2="530" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="850" y1="530" x2="580" y2="530" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="580" y1="530" x2="580" y2="560" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow3)"/>
+
+  <line x1="480" y1="500" x2="480" y2="560" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <rect x="330" y="560" width="300" height="60" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="480" y="585" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1e3a8a">Returned to Frontend</text>
+  <text x="480" y="603" text-anchor="middle" font-size="11.5" fill="#1e40af">Results Screen renders ranked list + votes</text>
+</svg>

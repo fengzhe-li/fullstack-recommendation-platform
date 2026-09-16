@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowDashed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="720" fill="#ffffff"/>
+  <text x="480" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">MeetEat — System Architecture</text>
+
+  <!-- Browser -->
+  <rect x="380" y="56" width="200" height="52" rx="10" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <text x="480" y="87" text-anchor="middle" font-size="15" fill="#0f172a">User / Browser</text>
+
+  <line x1="480" y1="108" x2="480" y2="140" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Frontend -->
+  <rect x="330" y="140" width="300" height="60" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="480" y="166" text-anchor="middle" font-size="15" font-weight="600" fill="#1e3a8a">React 19 + TypeScript + Vite</text>
+  <text x="480" y="185" text-anchor="middle" font-size="12" fill="#1e40af">Landing · Room · Loading · Results · Winner</text>
+
+  <line x1="480" y1="200" x2="480" y2="234" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="560" y="222" text-anchor="middle" font-size="11" fill="#475569">HTTP / JSON (fetch)</text>
+
+  <!-- Backend -->
+  <rect x="300" y="234" width="360" height="60" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="480" y="260" text-anchor="middle" font-size="15" font-weight="600" fill="#14532d">FastAPI Backend</text>
+  <text x="480" y="279" text-anchor="middle" font-size="12" fill="#166534">/api/rooms · /api/participants · /api/recommendations · /api/votes</text>
+
+  <!-- connectors down to services -->
+  <line x1="380" y1="294" x2="180" y2="336" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="440" y1="294" x2="365" y2="336" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="520" y1="294" x2="595" y2="336" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="580" y1="294" x2="780" y2="336" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Service row -->
+  <rect x="90" y="336" width="180" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="180" y="367" text-anchor="middle" font-size="13" fill="#78350f">Room Service</text>
+
+  <rect x="275" y="336" width="180" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="365" y="367" text-anchor="middle" font-size="13" fill="#78350f">Recommendation Service</text>
+
+  <rect x="505" y="336" width="180" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="595" y="367" text-anchor="middle" font-size="13" fill="#78350f">Vote Service</text>
+
+  <rect x="690" y="336" width="180" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="780" y="360" text-anchor="middle" font-size="13" fill="#78350f">AI Explanation</text>
+  <text x="780" y="376" text-anchor="middle" font-size="13" fill="#78350f">Service</text>
+
+  <!-- Deterministic engine + seed data, under Recommendation Service -->
+  <line x1="330" y1="388" x2="330" y2="420" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="400" y1="388" x2="400" y2="420" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="230" y="420" width="200" height="52" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="330" y="443" text-anchor="middle" font-size="12" fill="#4c1d95">Deterministic</text>
+  <text x="330" y="459" text-anchor="middle" font-size="12" fill="#4c1d95">Scoring Engine</text>
+
+  <rect x="440" y="420" width="210" height="52" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="545" y="443" text-anchor="middle" font-size="12" fill="#4c1d95">Static London</text>
+  <text x="545" y="459" text-anchor="middle" font-size="12" fill="#4c1d95">Restaurant Seed Data</text>
+
+  <!-- AI to external, dashed -->
+  <line x1="780" y1="388" x2="780" y2="420" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowDashed)"/>
+  <rect x="670" y="420" width="220" height="52" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="780" y="443" text-anchor="middle" font-size="12" fill="#475569">Z.AI / GLM glm-5.1</text>
+  <text x="780" y="459" text-anchor="middle" font-size="11" fill="#64748b">optional, server-side only</text>
+
+  <!-- All services down to Postgres -->
+  <line x1="180" y1="388" x2="330" y2="560" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="330" y1="472" x2="380" y2="560" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="595" y1="388" x2="480" y2="560" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="780" y1="472" x2="580" y2="560" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="280" y="560" width="400" height="70" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="480" y="588" text-anchor="middle" font-size="15" font-weight="600" fill="#7f1d1d">PostgreSQL</text>
+  <text x="480" y="608" text-anchor="middle" font-size="11.5" fill="#991b1b">rooms · participants · recommendation_runs</text>
+  <text x="480" y="623" text-anchor="middle" font-size="11.5" fill="#991b1b">recommendation_results (+ AI metadata) · votes</text>
+
+  <text x="480" y="668" text-anchor="middle" font-size="12" fill="#475569">Alembic migrations version-control the schema · Docker Compose runs backend + PostgreSQL together</text>
+  <text x="480" y="690" text-anchor="middle" font-size="12" fill="#475569">The scoring engine is the source of truth — the LLM only explains already-ranked, persisted results.</text>
+</svg>

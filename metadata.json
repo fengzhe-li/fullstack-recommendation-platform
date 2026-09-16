@@ -1,0 +1,5 @@
+{
+  "name": "MeetEat",
+  "description": "Multi-person collaborative group dining recommendation system with postal geocoding, precise travel times estimation, and composite consensus scoring.",
+  "requestFramePermissions": ["geolocation"]
+}

@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --color-green: #bef264; /* Accessible lime accent on near-black surfaces */
+  --color-dark: #0A0A0B; /* Bento Pitch Dark background */
+  --color-dark-light: rgba(24, 24, 27, 0.6); /* Zinc 900 translucent cell background */
+  --color-dark-lighter: #09090b; /* Zinc 950 block background */
+  --color-muted-green: #a1a1aa; /* Zinc 400 */
+  --color-zinc-300: #e4e4e7;
+  --color-zinc-400: #d4d4d8;
+  --color-zinc-455: #c7c7cf;
+  --color-zinc-500: #a1a1aa;
+  --color-zinc-600: #a1a1aa;
+  --color-zinc-650: #a1a1aa;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-dark);
+  color: #f4f4f5;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Custom background grid and ambient shine effect */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
