@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import ResultsScreen from './ResultsScreen';
 import { alice, bob, primaryRecommendation } from '../test/fixtures';
@@ -56,7 +56,9 @@ describe('ResultsScreen', () => {
     const voteButton = screen.getByRole('button', { name: /Vote \(0\)/i });
     fireEvent.click(voteButton);
     expect(screen.queryByText('STORED')).not.toBeInTheDocument();
-    expect(screen.getByText('SAVING…')).toBeInTheDocument();
+    const statusBlock = screen.getByText('Consensus Vote').parentElement?.parentElement;
+    expect(statusBlock).not.toBeNull();
+    expect(within(statusBlock as HTMLElement).getByText('SAVING…')).toBeInTheDocument();
 
     resolveVote();
     await waitFor(() => expect(screen.getByText('STORED')).toBeInTheDocument());
