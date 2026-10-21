@@ -48,6 +48,51 @@ describe('ResultsScreen', () => {
     expect(screen.getByText('STORED')).toBeInTheDocument();
   });
 
+  it('does not show STORED or increment counts until the server confirms', async () => {
+    let resolveVote!: () => void;
+    const onVote = vi.fn(() => new Promise<void>((resolve) => { resolveVote = resolve; }));
+    render(<ResultsScreen lang="en" recommendations={[primaryRecommendation]} participants={[alice, bob]} averageBudget={33} onRestart={vi.fn()} onVote={onVote} />);
+
+    const voteButton = screen.getByRole('button', { name: /Vote \(0\)/i });
+    fireEvent.click(voteButton);
+    expect(screen.queryByText('STORED')).not.toBeInTheDocument();
+    expect(screen.getByText('SAVING…')).toBeInTheDocument();
+
+    resolveVote();
+    await waitFor(() => expect(screen.getByText('STORED')).toBeInTheDocument());
+    expect(screen.getByRole('button', { name: /Voted \(0\)/i })).toBeDisabled();
+  });
+
+  it('shows vote failure and allows retry without incrementing confirmed votes', async () => {
+    const onVote = vi.fn()
+      .mockRejectedValueOnce(new Error('Not authorized'))
+      .mockResolvedValueOnce(undefined);
+    render(<ResultsScreen lang="en" recommendations={[primaryRecommendation]} participants={[alice, bob]} averageBudget={33} onRestart={vi.fn()} onVote={onVote} />);
+
+    const voteButton = screen.getByRole('button', { name: /Vote \(0\)/i });
+    fireEvent.click(voteButton);
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Not authorized'));
+    expect(screen.getByRole('button', { name: /Vote \(0\)/i })).not.toBeDisabled();
+    expect(screen.queryByText('STORED')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Vote \(0\)/i }));
+    await waitFor(() => expect(screen.getByText('STORED')).toBeInTheDocument());
+    expect(onVote).toHaveBeenCalledTimes(2);
+  });
+
+  it('prevents duplicate submissions while a vote is pending', async () => {
+    let resolveVote!: () => void;
+    const onVote = vi.fn(() => new Promise<void>((resolve) => { resolveVote = resolve; }));
+    render(<ResultsScreen lang="en" recommendations={[primaryRecommendation]} participants={[alice, bob]} averageBudget={33} onRestart={vi.fn()} onVote={onVote} />);
+
+    const voteButton = screen.getByRole('button', { name: /Vote \(0\)/i });
+    fireEvent.click(voteButton);
+    fireEvent.click(voteButton);
+    expect(onVote).toHaveBeenCalledOnce();
+    resolveVote();
+    await waitFor(() => expect(screen.getByText('STORED')).toBeInTheDocument());
+  });
+
   it('shows a recoverable empty-state when no recommendations are returned', () => {
     const onRestart = vi.fn();
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Participant, Occasion, RecommendationResult } from './types';
+import { Participant, Occasion, RecommendationResult, VoteResponse } from './types';
 import { resolvePostcode } from './data/restaurants';
 import {
   addRoomParticipant,
@@ -349,7 +349,7 @@ export default function App() {
     setScreen('winner');
   };
 
-  const handleVote = async (recommendationIndex: number) => {
+  const handleVote = async (recommendationIndex: number): Promise<VoteResponse | void> => {
     const recommendation = recommendations[recommendationIndex];
     const actingParticipant = participants.find((participant) => participant.id === currentParticipantId);
     if (!roomCode || !actingParticipant || !currentParticipantToken || !recommendation?.id) {
@@ -369,8 +369,10 @@ export default function App() {
         })
       );
       handleWinnerCrowned(result.winner || recommendation);
+      return result;
     } catch (error) {
       setErrorMessage(getErrorMessage(error, 'Unable to store this vote.'));
+      throw error;
     }
   };
 

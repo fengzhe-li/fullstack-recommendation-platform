@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RecommendationResult, Participant, TravelMode } from '../types';
+import type { VoteResponse } from '../types';
 import { RotateCcw, Clock, ThumbsUp, Navigation, CalendarDays, Sparkles, Activity } from 'lucide-react';
 import { Lang, TRANSLATIONS } from '../utils/i18n';
 const MapVisualization = lazy(() => import('./MapVisualization'));
@@ -11,7 +12,7 @@ interface ResultsScreenProps {
   participants: Participant[];
   averageBudget: number;
   onRestart: () => void;
-  onVote?: (recommendationIndex: number) => void | Promise<void>;
+  onVote?: (recommendationIndex: number) => void | Promise<void | VoteResponse>;
 }
 
 const TRAVEL_ICONS: Record<TravelMode, string> = {
@@ -32,18 +33,27 @@ export default function ResultsScreen({
   onRestart,
   onVote,
 }: ResultsScreenProps) {
-  const [votes, setVotes] = useState<number[]>([0, 0, 0]);
+  const [votes, setVotes] = useState<number[]>(() => recommendations.map((item) => item.votes ?? 0));
   const [votedIdx, setVotedIdx] = useState<number | null>(null);
+  const [pendingIdx, setPendingIdx] = useState<number | null>(null);
+  const [voteError, setVoteError] = useState<string | null>(null);
   const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
   const t = TRANSLATIONS[lang];
 
   const handleVote = async (index: number) => {
-    const nextVotes = [...votes];
-    nextVotes[index] += 1;
-    setVotes(nextVotes);
-    setVotedIdx(index);
-    if (onVote) {
-      await onVote(index);
+    if (pendingIdx !== null || votedIdx !== null) return;
+    setPendingIdx(index);
+    setVoteError(null);
+    try {
+      const response = onVote ? await onVote(index) : undefined;
+      setVotedIdx(index);
+      if (response && 'voteCounts' in response) {
+        setVotes(recommendations.map((item) => response.voteCounts.find((vote) => vote.recommendationResultId === item.id)?.count ?? item.votes ?? 0));
+      }
+    } catch (error) {
+      setVoteError(error instanceof Error ? error.message : 'Unable to store this vote.');
+    } finally {
+      setPendingIdx(null);
     }
   };
 
@@ -81,6 +91,7 @@ export default function ResultsScreen({
 
   // For Commute Chart
   const maxTime = Math.max(...primary.travels.map(t => t.min), 15);
+  const voteDisabled = pendingIdx !== null || votedIdx !== null;
 
   return (
     <div className="w-full text-white py-6 flex flex-col min-h-screen">
@@ -165,17 +176,17 @@ export default function ResultsScreen({
                     e.stopPropagation();
                     void handleVote(0);
                   }}
-                  disabled={votedIdx !== null}
+                  disabled={voteDisabled}
                   className={`px-5 py-3 rounded-2xl font-display font-black text-xs flex items-center justify-center gap-2 cursor-pointer transition-all border-none ${
                     votedIdx === 0
                       ? 'bg-green text-black font-extrabold'
-                      : votedIdx !== null
+                      : voteDisabled
                         ? 'bg-zinc-800 text-zinc-650 opacity-60'
                         : 'bg-green hover:bg-emerald-400 text-black shadow shadow-green/20'
                   }`}
                 >
                   <ThumbsUp className="w-4 h-4 fill-current shrink-0" />
-                  <span>{votedIdx === 0 ? `Voted (${votes[0]}) ✓` : `${t.voteBtn} (${votes[0]})`}</span>
+                  <span>{pendingIdx === 0 ? 'SAVING…' : votedIdx === 0 ? `Voted (${votes[0]}) ✓` : `${t.voteBtn} (${votes[0]})`}</span>
                 </button>
 
                 <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
@@ -240,7 +251,7 @@ export default function ResultsScreen({
                       e.stopPropagation();
                       void handleVote(1);
                     }}
-                    disabled={votedIdx !== null}
+                    disabled={voteDisabled}
                     className={`mt-2.5 text-[9px] font-bold py-1.5 px-2.5 rounded-lg border w-full flex items-center justify-center gap-1.5 transition-all ${
                       votedIdx === 1
                         ? 'bg-green text-black border-green'
@@ -248,7 +259,7 @@ export default function ResultsScreen({
                     }`}
                   >
                     <ThumbsUp className="w-2.5 h-2.5 fill-current" />
-                    <span>{votedIdx === 1 ? 'Vote ✓' : `${t.voteBtn} (${votes[1]})`}</span>
+                    <span>{pendingIdx === 1 ? 'SAVING…' : votedIdx === 1 ? 'Vote ✓' : `${t.voteBtn} (${votes[1]})`}</span>
                   </button>
                 </div>
               ) : (
@@ -286,7 +297,7 @@ export default function ResultsScreen({
                       e.stopPropagation();
                       void handleVote(2);
                     }}
-                    disabled={votedIdx !== null}
+                    disabled={voteDisabled}
                     className={`mt-2.5 text-[9px] font-bold py-1.5 px-2.5 rounded-lg border w-full flex items-center justify-center gap-1.5 transition-all ${
                       votedIdx === 2
                         ? 'bg-green text-black border-green'
@@ -294,7 +305,7 @@ export default function ResultsScreen({
                     }`}
                   >
                     <ThumbsUp className="w-2.5 h-2.5 fill-current" />
-                    <span>{votedIdx === 2 ? 'Vote ✓' : `${t.voteBtn} (${votes[2]})`}</span>
+                    <span>{pendingIdx === 2 ? 'SAVING…' : votedIdx === 2 ? 'Vote ✓' : `${t.voteBtn} (${votes[2]})`}</span>
                   </button>
                 </div>
               ) : (
@@ -312,7 +323,7 @@ export default function ResultsScreen({
                 <div className="my-2 space-y-1">
                   <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                     <span>Status</span>
-                    <span className="font-bold text-green">{votedIdx === null ? 'READY' : 'STORED'}</span>
+                    <span className="font-bold text-green">{pendingIdx !== null ? 'SAVING…' : votedIdx === null ? 'READY' : 'STORED'}</span>
                   </div>
                   <div className="h-1.5 w-full bg-zinc-950 rounded-full overflow-hidden">
                     <motion.div
@@ -329,6 +340,11 @@ export default function ResultsScreen({
                 >
                   Lock Primary Destination →
                 </button>
+                {voteError && (
+                  <p role="alert" className="mt-2 text-[10px] leading-relaxed text-red-300">
+                    {voteError} Try again when you are ready.
+                  </p>
+                )}
               </div>
 
             </div>

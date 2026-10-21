@@ -109,6 +109,19 @@ def test_room_recommendation_run_is_persisted_and_returned_as_latest(client):
     assert latest_response.json()["recommendations"][0]["id"] == recommendations[0]["id"]
 
 
+def test_empty_room_recommendation_run_is_persisted_and_returned_as_empty(client):
+    room = create_room(client)
+    add_participant(client, room["roomCode"], "Alice", budget=1)
+
+    run_response = client.post(f"/api/rooms/{room['roomCode']}/recommendations")
+    assert run_response.status_code == 200
+    assert run_response.json()["recommendations"] == []
+
+    latest_response = client.get(f"/api/rooms/{room['roomCode']}/recommendations/latest")
+    assert latest_response.status_code == 200
+    assert latest_response.json()["recommendations"] == []
+
+
 def test_vote_is_persisted_and_duplicate_vote_updates_choice(client):
     room = create_room(client)
     participant = add_participant(client, room["roomCode"], "Alice", likes=["japanese"], budget=50)

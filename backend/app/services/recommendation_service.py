@@ -25,15 +25,6 @@ class RecommendationService:
             open_now,
         )
 
-        if len(results) == 0 and len(participants) > 0:
-            return find_recommendations(
-                participants[:1],
-                self._restaurants,
-                occasion,  # type: ignore[arg-type]
-                rain_mode,
-                open_now,
-            )
-
         return results
 
 

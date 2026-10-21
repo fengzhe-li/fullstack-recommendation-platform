@@ -70,6 +70,18 @@ def test_budget_filter_excludes_restaurant_above_budget():
     assert results == []
 
 
+def test_conflicting_hard_constraints_across_participants_return_no_recommendations():
+    results = find_recommendations(
+        [participant(budget=15), participant(id="p2", name="Bob", budget=15, dietary=["halal"])],
+        [restaurant(averagePrice=20, dietsSupported=["vegetarian"])],
+        "casual",
+        False,
+        True,
+    )
+
+    assert results == []
+
+
 def test_hard_dietary_filter_excludes_unsupported_requirement():
     results = find_recommendations(
         [participant(dietary=["halal"])],
